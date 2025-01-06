@@ -16,7 +16,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 public class signup_page extends AppCompatActivity {
 
@@ -25,15 +29,18 @@ public class signup_page extends AppCompatActivity {
     private Button signUpButton;
     private CheckBox termsCheckBox;
     private TextView signinLink;
-    private DatabaseHelper dbHelper;
+
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
 
-        dbHelper = new DatabaseHelper(this);
+        // Initialize Firebase Authentication
+        firebaseAuth = FirebaseAuth.getInstance();
 
+        // Initialize UI components
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirmPassword);
@@ -66,6 +73,7 @@ public class signup_page extends AppCompatActivity {
             String contactNumber = contactNumberEditText.getText().toString().trim();
             String countryCode = countryCodeSpinner.getSelectedItem().toString();
 
+            // Input validation
             if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || contactNumber.isEmpty()) {
                 Toast.makeText(signup_page.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else if (!password.equals(confirmPassword)) {
@@ -74,13 +82,28 @@ public class signup_page extends AppCompatActivity {
                 Toast.makeText(signup_page.this, "You must agree to the terms and conditions", Toast.LENGTH_SHORT).show();
             } else {
                 String fullPhoneNumber = countryCode + " " + contactNumber;
-                if (dbHelper.insertUser(email, password)) {
-                    Toast.makeText(signup_page.this, "Sign-Up Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(signup_page.this, signin_page.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(signup_page.this, "Sign-Up Failed", Toast.LENGTH_SHORT).show();
-                }
+
+                // Sign up the user with Firebase Authentication
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Sign-up successful
+                                Toast.makeText(signup_page.this, "Sign-Up Successful", Toast.LENGTH_SHORT).show();
+
+                                // Navigate to Sign-In page
+                                Intent intent = new Intent(signup_page.this, signin_page.class);
+                                startActivity(intent);
+                                finish(); // Prevent returning to sign-up screen
+                            } else {
+                                // Handle errors during sign-up
+                                if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                    Toast.makeText(signup_page.this, "This email is already registered", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Sign-Up Failed";
+                                    Toast.makeText(signup_page.this, errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
         });
     }
@@ -92,6 +115,7 @@ public class signup_page extends AppCompatActivity {
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
+                // Navigate to the Sign-In page
                 Intent intent = new Intent(signup_page.this, signin_page.class);
                 startActivity(intent);
             }
