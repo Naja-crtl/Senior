@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.weddingapp">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/launcher"
+        android:label="WeddingApp"
+        android:roundIcon="@drawable/launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyApplication">
+        <activity
+            android:name=".TodoActivity"
+            android:exported="false" /> <!-- Starter Screen as Launcher -->
+        <activity
+            android:name=".starter_screen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- Splash Screen -->
+        <!-- Other Activities -->
+        <activity
+            android:name=".signin_page"
+            android:exported="false" />
+        <activity
+            android:name=".signup_page"
+            android:exported="false" />
+        <activity
+            android:name=".dashboard"
+            android:exported="false" />
+        <activity
+            android:name=".couplenames"
+            android:exported="false" />
+        <activity
+            android:name=".Events"
+            android:exported="false" />
+    </application>
+
+</manifest>
