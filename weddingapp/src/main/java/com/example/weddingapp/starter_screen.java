@@ -14,12 +14,20 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class starter_screen extends AppCompatActivity {
+
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starter_screen);
+
+        // Initialize Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // Find the logo ImageView and app title TextView
         ImageView logoImage = findViewById(R.id.logoImage);
@@ -57,10 +65,18 @@ public class starter_screen extends AppCompatActivity {
                     // Apply the fade-in animation to the app title
                     appTitle.startAnimation(fadeInAnimation);
 
-                    // Delay before navigating to the splash screen
+                    // Delay before navigating based on the authentication state
                     new Handler().postDelayed(() -> {
-                        Intent intent = new Intent(starter_screen.this, signin_page.class);
-                        startActivity(intent);
+                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                        if (currentUser != null) {
+                            // User is signed in; navigate to dashboard
+                            Intent intent = new Intent(starter_screen.this, dashboard.class);
+                            startActivity(intent);
+                        } else {
+                            // User is not signed in; navigate to signin_page
+                            Intent intent = new Intent(starter_screen.this, signin_page.class);
+                            startActivity(intent);
+                        }
                         finish(); // Close the starter screen activity
                     }, 2000); // Wait for the fade-in animation to complete
                 }
