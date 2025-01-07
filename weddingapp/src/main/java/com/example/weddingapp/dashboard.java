@@ -1,13 +1,18 @@
 package com.example.weddingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -23,20 +28,25 @@ public class dashboard extends AppCompatActivity {
     private TextView tvWelcomeMessage, tvCountdown;
     private ImageButton btnMenu;
     private FirebaseFirestore firestore;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        // Initialize Firebase
+        firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
+        // Initialize UI components
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
         tvCountdown = findViewById(R.id.tvCountdown);
         btnMenu = findViewById(R.id.btnMenu);
 
+        // Menu button toggle
         btnMenu.setOnClickListener(v -> {
             if (!drawerLayout.isDrawerOpen(navigationView)) {
                 drawerLayout.openDrawer(navigationView);
@@ -44,6 +54,9 @@ public class dashboard extends AppCompatActivity {
                 drawerLayout.closeDrawer(navigationView);
             }
         });
+
+        // Set Navigation Menu Item Click Listener
+        navigationView.setNavigationItemSelectedListener(this::handleMenuItemClick);
 
         // Retrieve data from Firestore
         firestore.collection("couples")
@@ -89,5 +102,37 @@ public class dashboard extends AppCompatActivity {
         } else {
             tvCountdown.setText("Wedding date not set.");
         }
+    }
+
+    private boolean handleMenuItemClick(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.navLogout) {
+            logout();
+        } else if (id == R.id.navMyEvents) {
+            Intent intent = new Intent(dashboard.this, Events.class);
+            startActivity(intent);
+        } else if (id == R.id.navTasksSchedule) {
+            Intent intent = new Intent(dashboard.this, TodoActivity.class);
+            startActivity(intent);
+        }
+
+        drawerLayout.closeDrawer(navigationView);
+        return true;
+    }
+
+    private void logout() {
+        // Log out from Firebase
+        firebaseAuth.signOut();
+
+        // Clear any session-related shared preferences if applicable
+        getSharedPreferences("UserPrefs", MODE_PRIVATE).edit().clear().apply();
+
+        // Navigate to the sign-in page
+        Intent intent = new Intent(dashboard.this, signin_page.class);
+        startActivity(intent);
+        finish();
+
+        Toast.makeText(this, "You have been logged out", Toast.LENGTH_SHORT).show();
     }
 }
