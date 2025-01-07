@@ -1,23 +1,20 @@
 package com.example.weddingapp;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class signin_page extends AppCompatActivity {
 
@@ -26,14 +23,16 @@ public class signin_page extends AppCompatActivity {
     private TextView signUpLink;
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signinpage);
 
-        // Initialize Firebase Auth
+        // Initialize Firebase Auth and Firestore
         firebaseAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         // Initialize UI components
         emailInput = findViewById(R.id.emailInput);
@@ -61,12 +60,9 @@ public class signin_page extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign-in successful
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Toast.makeText(signin_page.this, "Sign-In Successful", Toast.LENGTH_SHORT).show();
-
-                            // Navigate to the next activity
-                            Intent intent = new Intent(signin_page.this, couplenames.class);
-                            startActivity(intent);
-                            finish(); // Prevent going back to the sign-in screen
+                            if (user != null) {
+                                fetchCoupleData(user.getUid()); // Fetch couple data under the signed-in user
+                            }
                         } else {
                             // If sign-in fails, display a message to the user
                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Sign-In Failed";
@@ -76,24 +72,45 @@ public class signin_page extends AppCompatActivity {
         });
     }
 
+    private void fetchCoupleData(String userId) {
+        // Reference the user's `couples` subcollection
+        CollectionReference couplesRef = firestore.collection("users").document(userId).collection("couples");
+
+        couplesRef.get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        // Get the first document (assuming one set of couple data per user)
+                        DocumentSnapshot coupleDoc = querySnapshot.getDocuments().get(0);
+
+                        String partner1 = coupleDoc.getString("partner1");
+                        String partner2 = coupleDoc.getString("partner2");
+                        String weddingDate = coupleDoc.getString("weddingDate");
+
+                        // Navigate to the dashboard with the retrieved data
+                        Intent intent = new Intent(signin_page.this, dashboard.class);
+                        intent.putExtra("partner1", partner1);
+                        intent.putExtra("partner2", partner2);
+                        intent.putExtra("weddingDate", weddingDate);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // No couple data found; navigate to the couple names page
+                        Intent intent = new Intent(signin_page.this, couplenames.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(signin_page.this, "Error fetching data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
     private void setupSignUpLink() {
-        String text = "Don't have an Account? Sign Up";
-        SpannableString spannable = new SpannableString(text);
-
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                // Navigate to the sign-up page
-                Intent intent = new Intent(signin_page.this, signup_page.class);
-                startActivity(intent);
-            }
-        };
-
-        int signUpStartIndex = text.indexOf("Sign Up");
-        spannable.setSpan(clickableSpan, signUpStartIndex, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(Color.BLUE), signUpStartIndex, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        signUpLink.setText(spannable);
-        signUpLink.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
+        signUpLink.setOnClickListener(v -> {
+            // Navigate to the sign-up page
+            Intent intent = new Intent(signin_page.this, signup_page.class);
+            startActivity(intent);
+        });
     }
 }
