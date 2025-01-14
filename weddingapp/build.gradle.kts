@@ -48,9 +48,9 @@ dependencies {
     implementation ("com.google.firebase:firebase-analytics")
 
     // Implementing AI chatbot DialogFlow from google
-    implementation ("com.google.cloud:google-cloud-dialogflow:v2")
-    implementation ("com.google.code.gson:gson:2.8.8")
-    implementation ("org.apache.commons:commons-lang3:3.12.0")
+//    implementation ("com.google.cloud:google-cloud-dialogflow:v2")
+//    implementation ("com.google.code.gson:gson:2.8.8")
+//    implementation ("org.apache.commons:commons-lang3:3.12.0")
 
 
 }

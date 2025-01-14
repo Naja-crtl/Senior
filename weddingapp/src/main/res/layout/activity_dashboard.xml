@@ -7,207 +7,213 @@
     android:layout_height="match_parent">
 
     <!-- Main Content -->
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/background_image"
-        android:padding="16dp">
+        android:fillViewport="true">
 
-        <!-- Menu Button -->
-        <ImageButton
-            android:id="@+id/btnMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:background="@null"
-            android:contentDescription="Menu Button"
-            android:src="@android:drawable/ic_menu_agenda" />
-
-        <!-- Welcome Message -->
-        <TextView
-            android:id="@+id/tvWelcomeMessage"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Welcome Partner 1 and Partner 2!"
-            android:textColor="#FFFFFF"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:fontFamily="cursive"
-            android:layout_marginBottom="20dp"/>
+            android:orientation="vertical"
+            android:background="@drawable/background_image"
+            android:padding="16dp">
 
-        <!-- Countdown Text -->
-        <TextView
-            android:id="@+id/tvCountdown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Days until the wedding: --"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:fontFamily="cursive"
-            android:layout_marginBottom="20dp"/>
-
-        <!-- Search Bar -->
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginBottom="20dp"
-            android:queryHint="Search here..." />
-
-        <!-- Grid Layout for Dashboard Buttons -->
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="3"
-            android:padding="8dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/edit_text_background">
-
-            <!-- My Events -->
-            <LinearLayout
-                android:id="@+id/llMyEvents"
-                android:layout_width="0dp"
+            <!-- Menu Button -->
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/event" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="My Events"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    android:gravity="center" />
-            </LinearLayout>
+                android:layout_marginBottom="20dp"
+                android:background="@null"
+                android:contentDescription="Menu Button"
+                android:src="@android:drawable/ic_menu_agenda" />
 
-            <!-- Budget -->
-            <LinearLayout
-                android:id="@+id/llBudget"
-                android:layout_width="0dp"
+            <!-- Welcome Message -->
+            <TextView
+                android:id="@+id/tvWelcomeMessage"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/budget" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Budget"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    android:gravity="center" />
-            </LinearLayout>
+                android:text="Welcome Partner 1 and Partner 2!"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:fontFamily="cursive"
+                android:layout_marginBottom="20dp" />
 
-            <!-- To-Do List -->
-            <LinearLayout
-                android:id="@+id/llTodoList"
-                android:layout_width="0dp"
+            <!-- Countdown Text -->
+            <TextView
+                android:id="@+id/tvCountdown"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/checklist" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="To-Do List"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    android:gravity="center" />
-            </LinearLayout>
+                android:text="Days until the wedding: --"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="cursive"
+                android:layout_marginBottom="20dp" />
 
-            <!-- Categories -->
-            <LinearLayout
-                android:id="@+id/llCategories"
-                android:layout_width="0dp"
+            <!-- Search Bar -->
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/category" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Categories"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    android:gravity="center" />
-            </LinearLayout>
+                android:layout_margin="10dp"
+                android:layout_marginBottom="20dp"
+                android:queryHint="Search here..." />
 
-            <!-- Guest List -->
-            <LinearLayout
-                android:id="@+id/llGuestList"
-                android:layout_width="0dp"
+            <!-- Grid Layout for Dashboard Buttons -->
+            <GridLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/guests" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Guest List"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    android:gravity="center" />
-            </LinearLayout>
+                android:columnCount="2"
+                android:rowCount="3"
+                android:padding="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/edit_text_background">
 
-            <!-- Timeline -->
-            <LinearLayout
-                android:id="@+id/llTimeline"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/timeline" />
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- My Events -->
+                <LinearLayout
+                    android:id="@+id/llMyEvents"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Timeline"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    android:gravity="center" />
-            </LinearLayout>
-        </GridLayout>
-    </LinearLayout>
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/event" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="My Events"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- Budget -->
+                <LinearLayout
+                    android:id="@+id/llBudget"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/budget" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Budget"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- To-Do List -->
+                <LinearLayout
+                    android:id="@+id/llTodoList"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/checklist" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="To-Do List"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- Categories -->
+                <LinearLayout
+                    android:id="@+id/llCategories"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/category" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categories"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- Guest List -->
+                <LinearLayout
+                    android:id="@+id/llGuestList"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/guests" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Guest List"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- Timeline -->
+                <LinearLayout
+                    android:id="@+id/llTimeline"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/timeline" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Timeline"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"
+                        android:gravity="center" />
+                </LinearLayout>
+            </GridLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView

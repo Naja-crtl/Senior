@@ -21,6 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class signup_page extends AppCompatActivity {
 
@@ -31,14 +35,16 @@ public class signup_page extends AppCompatActivity {
     private TextView signinLink;
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_page);
 
-        // Initialize Firebase Authentication
+        // Initialize Firebase Authentication and Firestore
         firebaseAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         // Initialize UI components
         emailEditText = findViewById(R.id.email);
@@ -88,12 +94,8 @@ public class signup_page extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 // Sign-up successful
-                                Toast.makeText(signup_page.this, "Sign-Up Successful", Toast.LENGTH_SHORT).show();
-
-                                // Navigate to Sign-In page
-                                Intent intent = new Intent(signup_page.this, signin_page.class);
-                                startActivity(intent);
-                                finish(); // Prevent returning to sign-up screen
+                                String userId = firebaseAuth.getCurrentUser().getUid();
+                                saveUserDataToFirestore(userId, email, fullPhoneNumber);
                             } else {
                                 // Handle errors during sign-up
                                 if (task.getException() instanceof FirebaseAuthUserCollisionException) {
@@ -106,6 +108,27 @@ public class signup_page extends AppCompatActivity {
                         });
             }
         });
+    }
+
+    private void saveUserDataToFirestore(String userId, String email, String phoneNumber) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", email);
+        userData.put("phoneNumber", phoneNumber);
+        userData.put("initialized", true);
+
+        firestore.collection("users").document(userId)
+                .set(userData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(signup_page.this, "Sign-Up Successful!", Toast.LENGTH_SHORT).show();
+
+                    // Navigate to the Sign-In page
+                    Intent intent = new Intent(signup_page.this, signin_page.class);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(signup_page.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void setupSignInLink() {

@@ -13,6 +13,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -58,19 +60,22 @@ public class dashboard extends AppCompatActivity {
         // Set Navigation Menu Item Click Listener
         navigationView.setNavigationItemSelectedListener(this::handleMenuItemClick);
 
-        // Retrieve data from Firestore
-        firestore.collection("couples")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        queryDocumentSnapshots.forEach(document -> {
-                            String partner1 = document.getString("partner1");
-                            String partner2 = document.getString("partner2");
-                            String weddingDate = document.getString("weddingDate");
+        // Retrieve user-specific data from Firestore
+        String userId = firebaseAuth.getCurrentUser().getUid();
+        CollectionReference couplesRef = firestore.collection("users").document(userId).collection("couples");
 
-                            tvWelcomeMessage.setText("Welcome " + partner1 + " and " + partner2 + "!");
-                            calculateCountdown(weddingDate);
-                        });
+        couplesRef.get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        // Assume only one document exists in the `couples` subcollection for simplicity
+                        DocumentSnapshot coupleDoc = querySnapshot.getDocuments().get(0);
+
+                        String partner1 = coupleDoc.getString("partner1");
+                        String partner2 = coupleDoc.getString("partner2");
+                        String weddingDate = coupleDoc.getString("weddingDate");
+
+                        tvWelcomeMessage.setText("Welcome " + partner1 + " and " + partner2 + "!");
+                        calculateCountdown(weddingDate);
                     } else {
                         tvWelcomeMessage.setText("No data available.");
                         tvCountdown.setText("Set your wedding date.");
