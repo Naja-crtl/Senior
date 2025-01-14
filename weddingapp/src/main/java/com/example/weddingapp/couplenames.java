@@ -9,8 +9,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -68,32 +66,26 @@ public class couplenames extends AppCompatActivity {
         if (partner1.isEmpty() || partner2.isEmpty() || selectedWeddingDate.isEmpty()) {
             Toast.makeText(couplenames.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
         } else {
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (currentUser != null) {
-                String userId = currentUser.getUid();
+            Map<String, Object> coupleData = new HashMap<>();
+            coupleData.put("partner1", partner1);
+            coupleData.put("partner2", partner2);
+            coupleData.put("weddingDate", selectedWeddingDate);
 
-                Map<String, Object> coupleData = new HashMap<>();
-                coupleData.put("partner1", partner1);
-                coupleData.put("partner2", partner2);
-                coupleData.put("weddingDate", selectedWeddingDate);
+            firestore.collection("couples")
+                    .add(coupleData)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(couplenames.this, "Data saved successfully!", Toast.LENGTH_SHORT).show();
 
-                firestore.collection("users").document(userId).collection("couples")
-                        .add(coupleData) // Add new couple data under the `couples` subcollection
-                        .addOnSuccessListener(documentReference -> {
-                            Toast.makeText(couplenames.this, "Data saved successfully!", Toast.LENGTH_SHORT).show();
-
-                            // Navigate to Dashboard
-                            Intent intent = new Intent(couplenames.this, dashboard.class);
-                            intent.putExtra("partner1", partner1);
-                            intent.putExtra("partner2", partner2);
-                            intent.putExtra("weddingDate", selectedWeddingDate);
-                            startActivity(intent);
-                            finish();
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(couplenames.this, "Failed to save data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
-            }
+                        // Pass data to the next activity
+                        Intent intent = new Intent(couplenames.this, dashboard.class);
+                        intent.putExtra("partner1", partner1);
+                        intent.putExtra("partner2", partner2);
+                        intent.putExtra("weddingDate", selectedWeddingDate);
+                        startActivity(intent);
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(couplenames.this, "Failed to save data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         }
     }
 }
