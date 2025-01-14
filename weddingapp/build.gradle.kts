@@ -43,9 +43,12 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Firebase integration for storing data
-    implementation (platform("com.google.firebase:firebase-bom:32.3.0"))
-    implementation ("com.google.firebase:firebase-analytics")
+    // Firebase platform and dependencies
+    implementation(platform("com.google.firebase:firebase-bom:32.3.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.firebaseui:firebase-ui-firestore:8.0.1")
 
     // Implementing AI chatbot DialogFlow from google
 //    implementation ("com.google.cloud:google-cloud-dialogflow:v2")

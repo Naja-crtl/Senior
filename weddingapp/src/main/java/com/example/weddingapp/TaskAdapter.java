@@ -9,19 +9,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+public class TaskAdapter extends FirestoreRecyclerAdapter<Task, TaskAdapter.TaskViewHolder> {
 
-    private ArrayList<Task> tasks;
     private OnTaskDeleteListener deleteListener;
 
     public interface OnTaskDeleteListener {
-        void onDeleteTask(int position);
+        void onDeleteTask(Task task);
     }
 
-    public TaskAdapter(ArrayList<Task> tasks, OnTaskDeleteListener deleteListener) {
-        this.tasks = tasks;
+    public TaskAdapter(@NonNull FirestoreRecyclerOptions<Task> options, OnTaskDeleteListener deleteListener) {
+        super(options);
         this.deleteListener = deleteListener;
     }
 
@@ -34,21 +34,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Task task = tasks.get(position);
+    protected void onBindViewHolder(@NonNull TaskViewHolder holder, int position, @NonNull Task task) {
         holder.tvTitle.setText(task.getTitle());
         holder.tvDescription.setText(task.getDescription());
 
         holder.btnDelete.setOnClickListener(v -> {
             if (deleteListener != null) {
-                deleteListener.onDeleteTask(position);
+                deleteListener.onDeleteTask(task); // Pass the task object with ID
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return tasks.size();
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {

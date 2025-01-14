@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class signup_page extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText, confirmPasswordEditText, contactNumberEditText;
+    private EditText firstName, lastName, emailEditText, passwordEditText, confirmPasswordEditText, contactNumberEditText;
     private Spinner countryCodeSpinner;
     private Button signUpButton;
     private CheckBox termsCheckBox;
@@ -47,6 +47,8 @@ public class signup_page extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         // Initialize UI components
+        firstName = findViewById(R.id.firstName);
+        lastName = findViewById(R.id.lastName);
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirmPassword);
@@ -73,6 +75,8 @@ public class signup_page extends AppCompatActivity {
 
     private void setSignUpButtonListener() {
         signUpButton.setOnClickListener(v -> {
+            String fName = firstName.getText().toString().trim();
+            String lName = lastName.getText().toString().trim();
             String email = emailEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
             String confirmPassword = confirmPasswordEditText.getText().toString().trim();
@@ -95,7 +99,7 @@ public class signup_page extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 // Sign-up successful
                                 String userId = firebaseAuth.getCurrentUser().getUid();
-                                saveUserDataToFirestore(userId, email, fullPhoneNumber);
+                                saveUserDataToFirestore(userId, fName, lName, email, fullPhoneNumber, countryCode);
                             } else {
                                 // Handle errors during sign-up
                                 if (task.getException() instanceof FirebaseAuthUserCollisionException) {
@@ -110,19 +114,26 @@ public class signup_page extends AppCompatActivity {
         });
     }
 
-    private void saveUserDataToFirestore(String userId, String email, String phoneNumber) {
+    private void saveUserDataToFirestore(String userId,String firstName, String lastName, String email, String phoneNumber, String countryCode) {
+        // Create a map to store user data
         Map<String, Object> userData = new HashMap<>();
+        userData.put("userId", userId); // Include the user ID
+        userData.put("firstName", firstName);
+        userData.put("lastName", lastName);
         userData.put("email", email);
         userData.put("phoneNumber", phoneNumber);
-        userData.put("initialized", true);
+        userData.put("countryCode", countryCode);
+        userData.put("initialized", true); // Any other flags or metadata you may need
 
+        // Add the data to Firestore under the 'users' collection
         firestore.collection("users").document(userId)
                 .set(userData)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(signup_page.this, "Sign-Up Successful!", Toast.LENGTH_SHORT).show();
 
-                    // Navigate to the Sign-In page
+                    // Navigate to another activity (e.g., Sign-In or Dashboard)
                     Intent intent = new Intent(signup_page.this, signin_page.class);
+                    intent.putExtra("userId", userId); // Pass userId to the next activity
                     startActivity(intent);
                     finish();
                 })
@@ -130,6 +141,7 @@ public class signup_page extends AppCompatActivity {
                     Toast.makeText(signup_page.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
 
     private void setupSignInLink() {
         String text = "Already have an Account? Sign In";

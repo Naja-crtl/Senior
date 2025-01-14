@@ -1,7 +1,13 @@
 package com.example.weddingapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -107,10 +113,20 @@ public class signin_page extends AppCompatActivity {
 
 
     private void setupSignUpLink() {
-        signUpLink.setOnClickListener(v -> {
-            // Navigate to the sign-up page
-            Intent intent = new Intent(signin_page.this, signup_page.class);
-            startActivity(intent);
-        });
+        String text = "Don't have an Account? Sign Up";
+        SpannableString spannable = new SpannableString(text);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                // Navigate to the Sign-Up page
+                Intent intent = new Intent(signin_page.this, signup_page.class);
+                startActivity(intent);
+            }
+        };
+        int signUpStartIndex = text.indexOf("Sign Up");
+        spannable.setSpan(clickableSpan, signUpStartIndex, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(Color.BLUE), signUpStartIndex, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        signUpLink.setText(spannable);
+        signUpLink.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
     }
 }

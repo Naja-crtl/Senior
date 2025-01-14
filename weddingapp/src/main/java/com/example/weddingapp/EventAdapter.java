@@ -5,21 +5,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-    private ArrayList<Event> eventList;
+public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.EventViewHolder> {
+
     private OnEventDeleteListener deleteListener;
 
     public interface OnEventDeleteListener {
-        void onDeleteEvent(int position);
+        void onDeleteEvent(Event event);
     }
 
-    public EventAdapter(ArrayList<Event> eventList, OnEventDeleteListener deleteListener) {
-        this.eventList = eventList;
+    public EventAdapter(@NonNull FirestoreRecyclerOptions<Event> options, OnEventDeleteListener deleteListener) {
+        super(options);
         this.deleteListener = deleteListener;
     }
 
@@ -32,27 +34,20 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        Event event = eventList.get(position);
+    protected void onBindViewHolder(@NonNull EventViewHolder holder, int position, @NonNull Event event) {
         holder.tvEventName.setText(event.getName());
         holder.tvEventDate.setText(event.getDate());
         holder.tvEventTime.setText(event.getTime());
-        holder.tvEventNotes.setText(event.getNotes());
 
         holder.btnDelete.setOnClickListener(v -> {
             if (deleteListener != null) {
-                deleteListener.onDeleteEvent(position);
+                deleteListener.onDeleteEvent(event); // Pass the event object
             }
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return eventList.size();
-    }
-
     public static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView tvEventName, tvEventDate, tvEventTime, tvEventNotes;
+        TextView tvEventName, tvEventDate, tvEventTime;
         ImageButton btnDelete;
 
         public EventViewHolder(@NonNull View itemView) {
@@ -60,7 +55,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             tvEventName = itemView.findViewById(R.id.tvEventName);
             tvEventDate = itemView.findViewById(R.id.tvEventDate);
             tvEventTime = itemView.findViewById(R.id.tvEventTime);
-            tvEventNotes = itemView.findViewById(R.id.tvEventNotes);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
