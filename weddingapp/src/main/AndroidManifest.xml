@@ -37,6 +37,11 @@
         <activity
             android:name=".EventActivity"
             android:exported="false" />
+
+        <!-- Sample AdMob -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8672388835274922~1668621141"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -33,8 +33,8 @@ public class starter_screen extends AppCompatActivity {
         ImageView logoImage = findViewById(R.id.logoImage);
         TextView appTitle = findViewById(R.id.appTitle);
 
-        // Add a small delay to start the circular reveal animation
-        new Handler().postDelayed(() -> {
+        // Ensure the logoImage view is fully attached before starting animations
+        logoImage.post(() -> {
             // Get the center of the logo view and calculate the radius
             int centerX = logoImage.getWidth() / 2;
             int centerY = logoImage.getHeight() / 2;
@@ -45,7 +45,7 @@ public class starter_screen extends AppCompatActivity {
                     logoImage, centerX, centerY, 0, radius);
 
             // Set the animation duration
-            revealAnimator.setDuration(1500);
+            revealAnimator.setDuration(3000); // 3000ms for the circular reveal animation
 
             // Make the logo visible
             logoImage.setVisibility(View.VISIBLE);
@@ -68,19 +68,19 @@ public class starter_screen extends AppCompatActivity {
                     // Delay before navigating based on the authentication state
                     new Handler().postDelayed(() -> {
                         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                        Intent intent;
                         if (currentUser != null) {
                             // User is signed in; navigate to dashboard
-                            Intent intent = new Intent(starter_screen.this, dashboard.class);
-                            startActivity(intent);
+                            intent = new Intent(starter_screen.this, dashboard.class);
                         } else {
                             // User is not signed in; navigate to signin_page
-                            Intent intent = new Intent(starter_screen.this, signin_page.class);
-                            startActivity(intent);
+                            intent = new Intent(starter_screen.this, signin_page.class);
                         }
+                        startActivity(intent);
                         finish(); // Close the starter screen activity
-                    }, 2000); // Wait for the fade-in animation to complete
+                    }, 2000); // Wait for fade-in animation to complete
                 }
             });
-        }, 500); // Initial delay before starting the circular reveal
+        });
     }
 }

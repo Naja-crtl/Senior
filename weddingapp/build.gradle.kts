@@ -50,6 +50,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.firebaseui:firebase-ui-firestore:8.0.1")
 
+    // Google Mobile Ads SDK
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
+
     // Implementing AI chatbot DialogFlow from google
 //    implementation ("com.google.cloud:google-cloud-dialogflow:v2")
 //    implementation ("com.google.code.gson:gson:2.8.8")

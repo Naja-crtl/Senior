@@ -2,7 +2,11 @@ package com.example.weddingapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.WindowMetrics;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,6 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,7 +32,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
+
 public class dashboard extends AppCompatActivity {
+
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -34,6 +49,8 @@ public class dashboard extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
+    private AdView adView; // Declare AdView
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +74,59 @@ public class dashboard extends AppCompatActivity {
         llCategories = findViewById(R.id.llCategories);
         llGuestList = findViewById(R.id.llGuestList);
         llTimeline = findViewById(R.id.llTimeline);
+
+        // Initialize AdView
+        adView = findViewById(R.id.adView);
+
+        // Initialize Mobile Ads SDK
+        new Thread(() -> MobileAds.initialize(this, initializationStatus -> {})).start();
+
+        // Load an ad
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        adView.loadAd(adRequest);
+
+
+        // Set Ad Listener
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                Toast.makeText(dashboard.this, "Ad clicked!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return to the app after tapping on an ad.
+                Toast.makeText(dashboard.this, "Ad closed!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+                Toast.makeText(dashboard.this, "Ad failed to load: " + adError.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("AdMob", "Ad failed to load: " + adError.getMessage());
+
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Code to be executed when an impression is recorded for an ad.
+                Toast.makeText(dashboard.this, "Ad impression recorded!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                Toast.makeText(dashboard.this, "Ad loaded successfully!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that covers the screen.
+                Toast.makeText(dashboard.this, "Ad opened!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Set up navigation menu
         setupNavigationMenu();
@@ -91,6 +161,15 @@ public class dashboard extends AppCompatActivity {
             drawerLayout.closeDrawer(navigationView);
             return true;
         });
+
+
+        new Thread(
+                () -> {
+                    // Initialize the Google Mobile Ads SDK on a background thread.
+                    MobileAds.initialize(this, initializationStatus -> {
+                    });
+                })
+                .start();
     }
 
     private void loadUserData() {
@@ -119,28 +198,31 @@ public class dashboard extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (!querySnapshot.isEmpty()) {
-                        // Assume only one document exists
                         DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
                         String partner1 = doc.getString("partner1");
                         String partner2 = doc.getString("partner2");
                         String weddingDate = doc.getString("weddingDate");
 
-                        // Update UI
-                        tvWelcomeMessage.setText("Welcome " + partner1 + " and " + partner2 + "!");
-                        calculateCountdown(weddingDate);
+                        // Update UI on the main thread
+                        runOnUiThread(() -> {
+                            tvWelcomeMessage.setText("Welcome " + partner1 + " and " + partner2 + "!");
+                            calculateCountdown(weddingDate);
 
-                        // Save to SharedPreferences
-                        SharedPreferences sharedPreferences = getSharedPreferences("WeddingAppPrefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("partner1", partner1);
-                        editor.putString("partner2", partner2);
-                        editor.putString("weddingDate", weddingDate);
-                        editor.apply();
+                            // Cache data
+                            SharedPreferences sharedPreferences = getSharedPreferences("WeddingAppPrefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("partner1", partner1);
+                            editor.putString("partner2", partner2);
+                            editor.putString("weddingDate", weddingDate);
+                            editor.apply();
+                        });
                     } else {
-                        Toast.makeText(this, "No data found for the user!", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(() -> Toast.makeText(this, "No data found for the user!", Toast.LENGTH_SHORT).show());
                     }
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to fetch data: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> runOnUiThread(() -> {
+                    Toast.makeText(this, "Failed to fetch data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }));
     }
 
     private void calculateCountdown(String weddingDate) {
@@ -190,5 +272,20 @@ public class dashboard extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    // Get the ad size with screen width.
+    public AdSize getAdSize() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int adWidthPixels = displayMetrics.widthPixels;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowMetrics windowMetrics = this.getWindowManager().getCurrentWindowMetrics();
+            adWidthPixels = windowMetrics.getBounds().width();
+        }
+
+        float density = displayMetrics.density;
+        int adWidth = (int) (adWidthPixels / density);
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
     }
 }
