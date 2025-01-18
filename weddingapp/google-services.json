@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "491276846909",
-    "project_id": "weddingapp-832f6",
-    "storage_bucket": "weddingapp-832f6.firebasestorage.app"
+    "project_number": "400054102097",
+    "project_id": "seniorapp-caf61",
+    "storage_bucket": "seniorapp-caf61.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:491276846909:android:2c0029b4afc305f7d82754",
+        "mobilesdk_app_id": "1:400054102097:android:0327a538eb60096d477070",
         "android_client_info": {
           "package_name": "com.example.weddingapp"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAOVSaQaVY9evX5GrrtUaNRocm8Es9x0Kc"
+          "current_key": "AIzaSyCElsC_Ro1wCHlNCuhCAK-QvykBRiZCf6k"
         }
       ],
       "services": {
