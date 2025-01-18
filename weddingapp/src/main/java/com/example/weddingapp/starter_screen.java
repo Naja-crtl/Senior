@@ -4,7 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class starter_screen extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
+    private static final String TAG = "StarterScreen";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,54 +34,61 @@ public class starter_screen extends AppCompatActivity {
         ImageView logoImage = findViewById(R.id.logoImage);
         TextView appTitle = findViewById(R.id.appTitle);
 
-        // Ensure the logoImage view is fully attached before starting animations
+        // Start animations
+        startAnimations(logoImage, appTitle);
+    }
+
+    private void startAnimations(ImageView logoImage, TextView appTitle) {
+        Log.d(TAG, "Starting animations...");
+
+        // Ensure the logo view is laid out before starting animations
         logoImage.post(() -> {
-            // Get the center of the logo view and calculate the radius
-            int centerX = logoImage.getWidth() / 2;
-            int centerY = logoImage.getHeight() / 2;
-            float radius = (float) Math.hypot(logoImage.getWidth(), logoImage.getHeight());
+            // Perform the circular reveal animation
+            try {
+                int centerX = logoImage.getWidth() / 2;
+                int centerY = logoImage.getHeight() / 2;
+                float radius = (float) Math.hypot(logoImage.getWidth(), logoImage.getHeight());
 
-            // Create the circular reveal animation
-            Animator revealAnimator = ViewAnimationUtils.createCircularReveal(
-                    logoImage, centerX, centerY, 0, radius);
+                Animator revealAnimator = ViewAnimationUtils.createCircularReveal(
+                        logoImage, centerX, centerY, 0, radius);
+                revealAnimator.setDuration(1500); // Animation duration: 1500ms
+                logoImage.setVisibility(View.VISIBLE);
+                revealAnimator.start();
 
-            // Set the animation duration
-            revealAnimator.setDuration(3000); // 3000ms for the circular reveal animation
+                revealAnimator.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
 
-            // Make the logo visible
-            logoImage.setVisibility(View.VISIBLE);
+                        // Start fade-in animation for the app title
+                        Animation fadeInAnimation = AnimationUtils.loadAnimation(starter_screen.this, R.anim.fade_in);
+                        appTitle.startAnimation(fadeInAnimation);
 
-            // Start the circular reveal animation
-            revealAnimator.start();
-
-            // Add a listener to start the fade-in animation for the app title after the reveal
-            revealAnimator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-
-                    // Load fade-in animation from resources
-                    Animation fadeInAnimation = AnimationUtils.loadAnimation(starter_screen.this, R.anim.fade_in);
-
-                    // Apply the fade-in animation to the app title
-                    appTitle.startAnimation(fadeInAnimation);
-
-                    // Delay before navigating based on the authentication state
-                    new Handler().postDelayed(() -> {
-                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                        Intent intent;
-                        if (currentUser != null) {
-                            // User is signed in; navigate to dashboard
-                            intent = new Intent(starter_screen.this, dashboard.class);
-                        } else {
-                            // User is not signed in; navigate to signin_page
-                            intent = new Intent(starter_screen.this, signin_page.class);
-                        }
-                        startActivity(intent);
-                        finish(); // Close the starter screen activity
-                    }, 2000); // Wait for fade-in animation to complete
-                }
-            });
+                        // Navigate to the next screen after animations
+                        navigateToNextScreen();
+                    }
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Animation error: " + e.getMessage());
+                navigateToNextScreen(); // Fallback to navigation if animation fails
+            }
         });
+    }
+
+    private void navigateToNextScreen() {
+        Log.d(TAG, "Navigating to the next screen...");
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        Intent intent;
+
+        if (currentUser != null) {
+            Log.d(TAG, "User is signed in.");
+            intent = new Intent(starter_screen.this, dashboard.class);
+        } else {
+            Log.d(TAG, "User is not signed in.");
+            intent = new Intent(starter_screen.this, signin_page.class);
+        }
+
+        startActivity(intent);
+        finish();
     }
 }
