@@ -45,29 +45,34 @@ public class starter_screen extends AppCompatActivity {
         logoImage.post(() -> {
             // Perform the circular reveal animation
             try {
-                int centerX = logoImage.getWidth() / 2;
-                int centerY = logoImage.getHeight() / 2;
-                float radius = (float) Math.hypot(logoImage.getWidth(), logoImage.getHeight());
+                if (logoImage.getWidth() > 0 && logoImage.getHeight() > 0) {
+                    int centerX = logoImage.getWidth() / 2;
+                    int centerY = logoImage.getHeight() / 2;
+                    float radius = (float) Math.hypot(logoImage.getWidth(), logoImage.getHeight());
 
-                Animator revealAnimator = ViewAnimationUtils.createCircularReveal(
-                        logoImage, centerX, centerY, 0, radius);
-                revealAnimator.setDuration(1500); // Animation duration: 1500ms
-                logoImage.setVisibility(View.VISIBLE);
-                revealAnimator.start();
+                    Animator revealAnimator = ViewAnimationUtils.createCircularReveal(
+                            logoImage, centerX, centerY, 0, radius);
+                    revealAnimator.setDuration(3000);
+                    logoImage.setVisibility(View.VISIBLE);
+                    revealAnimator.start();
 
-                revealAnimator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
+                    revealAnimator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
 
-                        // Start fade-in animation for the app title
-                        Animation fadeInAnimation = AnimationUtils.loadAnimation(starter_screen.this, R.anim.fade_in);
-                        appTitle.startAnimation(fadeInAnimation);
+                            // Start fade-in animation for the app title
+                            Animation fadeInAnimation = AnimationUtils.loadAnimation(starter_screen.this, R.anim.fade_in);
+                            appTitle.startAnimation(fadeInAnimation);
 
-                        // Navigate to the next screen after animations
-                        navigateToNextScreen();
-                    }
-                });
+                            // Navigate to the next screen after animations
+                            navigateToNextScreen();
+                        }
+                    });
+                } else {
+                    Log.e(TAG, "Logo image dimensions are zero. Skipping animation.");
+                    navigateToNextScreen(); // Fallback to navigation
+                }
             } catch (Exception e) {
                 Log.e(TAG, "Animation error: " + e.getMessage());
                 navigateToNextScreen(); // Fallback to navigation if animation fails
