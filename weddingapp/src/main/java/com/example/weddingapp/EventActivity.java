@@ -30,8 +30,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class EventActivity extends AppCompatActivity {
 
@@ -39,7 +37,6 @@ public class EventActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private ImageButton btnMenu;
     private TextView tvPageTitle;
-
     private RecyclerView rvEventList;
     private LinearLayout eventInputContainer;
     private Button btnAddEvent, btnSaveEvent, btnChooseDate, btnChooseTime;

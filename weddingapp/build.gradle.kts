@@ -56,12 +56,6 @@ dependencies {
     // Play Services Authentication (optional, needed for some APIs)
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-    // Implementing AI chatbot DialogFlow from google
-//    implementation ("com.google.cloud:google-cloud-dialogflow:v2")
-//    implementation ("com.google.code.gson:gson:2.8.8")
-//    implementation ("org.apache.commons:commons-lang3:3.12.0")
-
-
 }
 
 // Apply Google Services plugin

@@ -2,15 +2,9 @@ package com.example.weddingapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowMetrics;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -26,7 +20,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
@@ -56,8 +49,6 @@ public class dashboard extends AppCompatActivity {
     private WebView webView;
     private FrameLayout webViewContainer;
     private Button btnOpenChatbot;
-    private boolean isChatbotVisible = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,13 +105,12 @@ public class dashboard extends AppCompatActivity {
 
     private void configureWebView() {
         WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true); // Enable JavaScript for Tidio
-        webSettings.setDomStorageEnabled(true); // Enable DOM storage for proper functioning
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
 
         // Load the Tidio chatbot HTML file from assets
         webView.loadUrl("file:///android_asset/tidio_chat.html");
 
-        // Ensure links and redirects open within the WebView
         webView.setWebViewClient(new WebViewClient());
     }
 
