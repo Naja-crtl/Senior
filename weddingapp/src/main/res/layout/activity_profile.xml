@@ -12,9 +12,6 @@
         android:gravity="center"
         android:padding="10dp">
 
-        <!-- Profile Picture -->
-
-        <!-- Change Photo -->
         <ImageView
             android:id="@+id/imgProfilePicture"
             android:layout_width="120dp"
@@ -24,59 +21,69 @@
             android:scaleType="centerCrop"
             android:src="@drawable/launcher" />
 
+        <!-- Title -->
         <TextView
-            android:id="@+id/tvChangePhoto"
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Photo"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:text="Edit Couple's Information"
             android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginBottom="20dp" />
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <!-- User Name Field -->
+        <!-- Partner 1 Name -->
         <EditText
-            android:id="@+id/etName"
+            android:id="@+id/etPartner1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="Partner 1 Name"
             android:inputType="textPersonName"
             android:textSize="16sp"
             android:padding="12dp"
             android:background="@drawable/edit_text_background"
             android:layout_marginBottom="16dp" />
 
-        <!-- Partner's Name -->
+        <!-- Partner 2 Name -->
         <EditText
-            android:id="@+id/etPartnerName"
+            android:id="@+id/etPartner2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Partner's Name"
+            android:hint="Partner 2 Name"
             android:inputType="textPersonName"
             android:textSize="16sp"
             android:padding="12dp"
             android:background="@drawable/edit_text_background"
             android:layout_marginBottom="16dp" />
 
-        <!-- Email Field -->
-        <EditText
-            android:id="@+id/etEmail"
+        <!-- Wedding Date Button -->
+        <Button
+            android:id="@+id/btnWeddingDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:textSize="16sp"
             android:padding="12dp"
-            android:background="@drawable/edit_text_background"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/black"
+            android:text="Select Wedding Date"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:fontFamily="cursive"
+            />
 
         <!-- Save Button -->
         <Button
             android:id="@+id/btnSaveProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:backgroundTint="@color/black"
             android:text="Save"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:backgroundTint="@color/black" />
+            android:textSize="20sp"
+            android:fontFamily="cursive"
+            />
+
     </LinearLayout>
 </ScrollView>

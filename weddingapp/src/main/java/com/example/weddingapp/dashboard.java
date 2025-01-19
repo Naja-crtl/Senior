@@ -60,6 +60,7 @@ public class dashboard extends AppCompatActivity {
         // Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        Log.d("FirebaseInit", "Firebase initialized successfully.");
 
         // Initialize UI components
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -157,7 +158,9 @@ public class dashboard extends AppCompatActivity {
                 startActivity(new Intent(this, TodoActivity.class));
             } else if (id == R.id.navLogout) {
                 logout();
-            }
+            } else if (id == R.id.navProfile) {
+                startActivity(new Intent(this, profile.class));
+            };
             drawerLayout.closeDrawer(navigationView);
             return true;
         });
