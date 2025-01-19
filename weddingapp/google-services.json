@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "400054102097",
-    "project_id": "seniorapp-caf61",
-    "storage_bucket": "seniorapp-caf61.firebasestorage.app"
+    "project_number": "491276846909",
+    "project_id": "weddingapp-832f6",
+    "storage_bucket": "weddingapp-832f6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:400054102097:android:0327a538eb60096d477070",
+        "mobilesdk_app_id": "1:491276846909:android:2c0029b4afc305f7d82754",
         "android_client_info": {
           "package_name": "com.example.weddingapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "491276846909-vrmds7ufkpf243fsh7muoh43kmi35d05.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.weddingapp",
+            "certificate_hash": "9a2aad91cfca5dbf14d970144c39c4e4381df5d8"
+          }
+        },
+        {
+          "client_id": "491276846909-asdto38vajtu4hcfedac7crb5bvdgvic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCElsC_Ro1wCHlNCuhCAK-QvykBRiZCf6k"
+          "current_key": "AIzaSyAOVSaQaVY9evX5GrrtUaNRocm8Es9x0Kc"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "491276846909-asdto38vajtu4hcfedac7crb5bvdgvic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

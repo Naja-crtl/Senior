@@ -43,7 +43,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Firebase platform and dependencies
+    // Firebase platform with Firebase Authentication, Firestore, and Analytics
     implementation(platform("com.google.firebase:firebase-bom:32.3.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
@@ -52,6 +52,9 @@ dependencies {
 
     // Google Mobile Ads SDK
     implementation("com.google.android.gms:play-services-ads:23.6.0")
+
+    // Play Services Authentication (optional, needed for some APIs)
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Implementing AI chatbot DialogFlow from google
 //    implementation ("com.google.cloud:google-cloud-dialogflow:v2")
